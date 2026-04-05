@@ -20,6 +20,7 @@ class GithubIssuesService
         $url = "https://api.github.com/repos/{$this->repo}/issues";
 
         $response = Http::withToken($this->token)
+            ->withHeaders(['User-Agent' => 'Laravel-App'])
             ->post($url, [
                 'title' => $title,
                 'body'  => $body,
