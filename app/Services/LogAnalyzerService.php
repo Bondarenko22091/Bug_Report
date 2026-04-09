@@ -11,7 +11,7 @@ class LogAnalyzerService
     {
         return retry(3, function () use ($text) {
             return Prism::text()
-                ->using(Provider::OpenRouter, 'openrouter/free') 
+                ->using(Provider::OpenRouter, 'grok-4-1-fast-non-reasoning') 
                 ->withSystemPrompt(
                     'Ты — опытный Senior Laravel разработчик и эксперт по инфраструктуре. ' .
                     'Твоя задача: проанализировать входящее сообщение. ' .
@@ -20,7 +20,7 @@ class LogAnalyzerService
                     'Отвечай на русском языке, используй Markdown для оформления кода.'
                 )
                 ->withPrompt($text)
-                ->asText()
+                ->asText() 
                 ->text;
         }, 100); 
     }

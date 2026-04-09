@@ -55,7 +55,7 @@ return [
         ],
         'openrouter' => [
             'api_key' => env('OPENROUTER_API_KEY', ''),
-            'url' => env('OPENROUTER_URL', 'https://openrouter.ai/api/v1'),
+            'url' => env('OPENROUTER_URL', 'https://neuroapi.host/v1'),
             'site' => [
                 'http_referer' => env('OPENROUTER_SITE_HTTP_REFERER', null),
                 'x_title' => env('OPENROUTER_SITE_X_TITLE', null),
