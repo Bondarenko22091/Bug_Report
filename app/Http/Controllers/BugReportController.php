@@ -8,31 +8,39 @@ use Illuminate\Http\Request;
 
 class BugReportController extends Controller
 {
-    public function store(Request $request, GithubIssuesService $githubService, LogAnalyzerService $aiService) 
-    {
+    public function store(
+        Request $request, 
+        GithubIssuesService $githubService, 
+        LogAnalyzerService $aiService
+    ) {
         $text = $request->input('text', 'Пустой отчет');
 
-        try {
-            $aiAnalysis = $aiService->analyze($text);
-        } catch (\Exception $e) {
-            $aiAnalysis = "Анализ временно недоступен: " . $e->getMessage();
+        $report = $aiService->analyze($text);
+        
+        $steps = "";
+        foreach ($report->steps_to_reproduce as $i => $step) {
+            $steps .= ($i + 1) . ". " . $step . "\n";
         }
-
-        $issueBody = "## Отчет\n\n" . $text . "\n\n---\n### Анализ (AI):\n" . $aiAnalysis;
-
-        $result = $githubService->createIssue(
-            title: 'Bug Report: ' . now()->format('Y-m-d H:i'),
-            body: $issueBody
-        );
-
-        if (isset($result['message']) && $result['message'] == 'Requires authentication') {
-            return response()->json(['status' => 'error', 'message' => 'GitHub Token invalid'], 401);
-        }
+        
+        $issueBody = "## {$report->title}\n\n"
+                   . "### Описание\n{$report->description}\n\n"
+                   . "### Шаги воспроизведения\n{$steps}\n\n"
+                   . "### Ожидаемый результат\n{$report->expected_result}\n\n"
+                   . "### Фактический результат\n{$report->actual_result}\n\n"
+                   . "### Критичность\n**" . strtoupper($report->severity) . "**\n\n"
+                   . "---\n*Сгенерировано автоматически с помощью AI*\n"
+                   . "**Исходный лог:**\n```\n{$text}\n```";
+        
+        $result = $githubService->createIssue($report->title, $issueBody);
 
         return response()->json([
             'status' => 'success',
             'github_url' => $result['html_url'] ?? 'error',
-            'ai_summary' => $aiAnalysis
+            'structured_report' => [
+                'title' => $report->title,
+                'severity' => $report->severity,
+                'steps_count' => count($report->steps_to_reproduce),
+            ]
         ]);
     }
 }
