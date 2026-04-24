@@ -10,7 +10,9 @@
         "laravel/framework": "^13.0",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^3.0",
-        "prism-php/prism": "^0.100.1"
+        "prism-php/prism": "^0.100.1",
+        "smalot/pdfparser": "^2.12",
+        "spatie/pdf-to-image": "^1.2"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

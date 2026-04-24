@@ -11,5 +11,6 @@ class GeneratedReport
         public string $expected_result,
         public string $actual_result,
         public string $severity,
+        public readonly ?string $visual_analysis = null,
     ) {}
 }
