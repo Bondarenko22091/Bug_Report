@@ -16,9 +16,9 @@ class BugReportController extends Controller
         $request->validate([
             'text' => 'required|string',
             'images' => 'nullable|array|max:5',
-            'images.*' => 'image|mimes:jpeg,png,jpg|max:5120',
+            'images.*' => 'image|mimes:jpeg,png,jpg|max:2048',
             'documents' => 'nullable|array|max:3',
-            'documents.*' => 'file|mimes:pdf|max:10240',
+            'documents.*' => 'file|mimes:pdf|max:5120',
         ]);
 
         $imagePaths = [];
@@ -53,6 +53,17 @@ class BugReportController extends Controller
                    . "**Исходный лог:**\n```\n{$text}\n```";
         
         $result = $githubService->createIssue($report->title, $issueBody);
+
+        if (!$request->wantsJson()) {
+            return redirect('/issue/create')->with('success', [
+                'url' => $result['html_url'] ?? '#',
+                'title' => $report->title,
+                'severity' => $report->severity,
+                'steps_count' => count($report->steps_to_reproduce),
+                'images_count' => count($imagePaths),
+                'documents_count' => count($documentPaths),
+            ]);
+        }
 
         return response()->json([
             'status' => 'success',
