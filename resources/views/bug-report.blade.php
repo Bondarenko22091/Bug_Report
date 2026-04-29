@@ -192,21 +192,97 @@
         }
 
         .close-btn {
-        cursor: pointer;
-        font-size: 20px;
-        color: #94a3b8;
-        padding: 0 4px;
-        line-height: 1;
-        transition: color 0.2s;
+            cursor: pointer;
+            font-size: 20px;
+            color: #94a3b8;
+            padding: 0 4px;
+            line-height: 1;
+            transition: color 0.2s;
         }
         .close-btn:hover {
             color: #ef4444;
+        }
+
+        .title-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 5px;
+        }
+        .tooltip-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 18px;
+            height: 18px;
+            background: white;
+            color: #64748b;
+            border: 2px solid #64748b;
+            border-radius: 50%;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: help;
+            position: relative;
+            transition: all 0.2s;
+            flex-shrink: 0;
+            line-height: 1;
+        }
+        .tooltip-icon:hover {
+            color: #2563eb;
+            border-color: #2563eb;
+            background: white;
+        }
+        .tooltip-text {
+            visibility: hidden;
+            opacity: 0;
+            position: absolute;
+            left: calc(100% + 12px);
+            top: 50%;
+            transform: translateY(-50%);
+            background: #1e293b;
+            color: white;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: normal;
+            white-space: normal;
+            width: 320px;
+            text-align: left;
+            line-height: 1.5;
+            z-index: 1000;
+            transition: opacity 0.2s, visibility 0.2s;
+            pointer-events: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        .tooltip-text::after {
+            content: '';
+            position: absolute;
+            right: 100%;
+            top: 50%;
+            transform: translateY(-50%);
+            border: 6px solid transparent;
+            border-right-color: #1e293b;
+        }
+        .tooltip-icon:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Создать баг-репорт</h1>
+        <div class="title-row">
+            <h1 style="margin: 0;">Создать баг-репорт</h1>
+            <span class="tooltip-icon">
+                ?
+                <span class="tooltip-text">
+                    1. Вставьте лог ошибки или опишите проблему своими словами.<br>
+                    2. Можно прикрепить скриншоты и(или) PDF-файлы.<br>
+                    3. Нажмите кнопку "Отправить баг-репорт".<br> 
+                    Нейросеть проанализирует всё вместе и автоматически создаст задачу в GitHub Issues.
+                </span>
+            </span>
+        </div>
 
         @if (session('success'))
             <div class="success" id="success-message">
