@@ -74,7 +74,7 @@ class LogAnalyzerService
 
         try {
             $response = Prism::structured()
-                ->using('xai', 'grok-4-1-fast-non-reasoning')
+                ->using('xai', 'grok-4.3')
                 ->withSchema($schema)
                 ->withSystemPrompt('Ты — ведущий разработчик. Делай глубокий анализ технических логов и скриншотов.')
                 ->withPrompt($prompt, $media)
